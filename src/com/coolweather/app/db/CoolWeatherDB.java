@@ -3,15 +3,14 @@ package com.coolweather.app.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.coolweather.app.modle.City;
-import com.coolweather.app.modle.County;
-import com.coolweather.app.modle.Province;
-
-import android.app.DownloadManager.Query;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.coolweather.app.modle.City;
+import com.coolweather.app.modle.County;
+import com.coolweather.app.modle.Province;
 
 public class CoolWeatherDB {
 	// 数据库名
@@ -97,7 +96,7 @@ public class CoolWeatherDB {
 		}
 	}
 //	从数据库读取省下所有城市信息
-	public List<County> loadcounty(int cityId){
+	public List<County> loadcounties(int cityId){
 		List<County> list = new ArrayList<County>();
 		Cursor cursor = db.query("County", null, "city_id = ?", new String[]{String.valueOf(cityId)}, null, null, null);
 		if(cursor.moveToFirst()){
