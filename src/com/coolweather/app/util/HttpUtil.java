@@ -8,8 +8,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpUtil {
-	public static void sendHttpRequest(final String adress,
+	public static void sendHttpRequest(final String address,
 			final HttpCallbackListener listener) {
+		System.out.println("sendHttpRequest");
 		new Thread(new Runnable() {
 
 			@Override
@@ -17,7 +18,7 @@ public class HttpUtil {
 				HttpURLConnection con = null;
 				URL url;
 				try {
-					url = new URL(adress);
+					url = new URL(address);
 					con = (HttpURLConnection) url.openConnection();
 					con.setRequestMethod("GET");
 					con.setConnectTimeout(8000);
@@ -28,8 +29,10 @@ public class HttpUtil {
 					StringBuilder response = new StringBuilder();
 					String line;
 					while (null != (line = read.readLine())) {
+						System.out.println(line);
 						response.append(line);
 					}
+					System.out.println(response.toString());
 					if (null != listener) {
 						listener.onFinish(response.toString());
 					}
@@ -46,5 +49,12 @@ public class HttpUtil {
 
 			}
 		}).start();
+	}
+	public static void main(String[] args) {
+//		String address = "";
+		System.out.println("hehe");
+//		address = "http://www.weather.com.cn/data/list3/city.xml";
+//		address = "http://www.weather.com.cn/data/city3jdata/china.html";
+//		HttpUtil.sendHttpRequest(address, null);
 	}
 }
