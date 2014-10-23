@@ -1,5 +1,8 @@
 package com.coolweather.app.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import com.coolweather.app.receiver.AutoUpdateReceiver;
 import com.coolweather.app.util.HttpCallbackListener;
 import com.coolweather.app.util.HttpUtil;
@@ -44,8 +47,13 @@ public class AutoUpdateService extends Service {
      */
     private void updateWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String weatherCode = prefs.getString("weather_code", "");
-        String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
+        String countyName = prefs.getString("county_name","");
+        try {
+        	countyName = URLEncoder.encode(countyName, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+        String address = "http://api.map.baidu.com/telematics/v3/weather?location="+countyName+"&output=json&ak=1bf4f9bb38cf3d3aaec3b7e4967d7421";
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {

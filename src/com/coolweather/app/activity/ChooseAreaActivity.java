@@ -46,22 +46,16 @@ public class ChooseAreaActivity extends Activity {
 	private Province selectedProvince;
 	private City selectedCity;
 
-    //当前选中的级别
 	private int currentLevel;
-    /**
-     * 是否从WeatherActivity中跳转过来。
-     */
     private boolean isFromWeatherActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity",false);
-        System.out.println("===isFromWeatherActivity:"+isFromWeatherActivity);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity) {
             Intent intent = new Intent(this, WeatherActivity.class);
-            System.out.println("===WeatherActivity1:");
             startActivity(intent);
             finish();
             return;
@@ -88,13 +82,9 @@ public class ChooseAreaActivity extends Activity {
 						selectedCity = cityList.get(index);
 						queryCounties();
 					} else if (currentLevel == LEVEL_COUNTY) {
-                        String countyCode = selectedProvince.getProvinceCode()
-                                +selectedCity.getCityCode()
-                                +countyList.get(index).getCountyCode();
-                        System.out.println("===WeatherActivity2:countyCode:"+countyCode);
+                        String countyName = countyList.get(index).getCountyName();
                         Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
-                        intent.putExtra("county_code", countyCode);
-                        System.out.println("===WeatherActivity2:");
+                        intent.putExtra("county_name", countyName);
                         startActivity(intent);
                         finish();
                     }
@@ -168,7 +158,6 @@ public class ChooseAreaActivity extends Activity {
 		}else {
 			address = "http://www.weather.com.cn/data/city3jdata/china.html";
 		}
-        System.out.println("==address:"+address);
 		showProgressDialog();
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
 			
@@ -209,7 +198,7 @@ public class ChooseAreaActivity extends Activity {
 					@Override
 					public void run() {
 						closeProgressDialog();
-						Toast.makeText(ChooseAreaActivity.this,"加载错误", Toast.LENGTH_SHORT).show();					}
+						Toast.makeText(ChooseAreaActivity.this,"加载失败", Toast.LENGTH_SHORT).show();					}
 				});
 			}
 		});
@@ -218,7 +207,7 @@ public class ChooseAreaActivity extends Activity {
 	private void showProgressDialog() {
 		if (null == progressdialog) {
 			progressdialog = new ProgressDialog(this);
-			progressdialog.setMessage("正在加载中...");
+			progressdialog.setMessage("正在加载...");
 			progressdialog.setCanceledOnTouchOutside(false);
 		}
 		progressdialog.show();
